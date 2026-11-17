@@ -87,9 +87,9 @@ const CATALOGO = [
   {t:'🍫 Alfajores Clásicos', nota:'Bañados en chocolate negro o blanco. Cuéntanos en los comentarios cuál deseas.', items:[
     ['c1','Clásico individual',800],['c3b','Clásico bolsita de 3',2200],['c3c','Clásico caja de 3',2700],
     ['c4','Clásico caja de 4',3200],['c6','Clásico caja de 6',4800]]},
-  {t:'🍓 Alfajores Premium', nota:'Frambuesa · Prestigio · Bon o Bon. Cuéntanos los sabores en comentarios.', items:[
+  {t:'🍓 Alfajores Premium', nota:'Frambuesa, Prestigio o Bon o Bon. Cuéntanos en los comentarios cuáles deseas.', items:[
     ['p1','Premium individual',1000],['p3b','Premium bolsita de 3',2700],['p3c','Premium caja de 3',3300],['p4','Premium caja de 4',4200]]},
-  {t:'🎁 Caja Surtida', nota:'Detalla los sabores que deseas en los comentarios.', items:[['s6','Caja surtida de 6',5500,'3 clásicos + 3 premium']]},
+  {t:'🎁 Caja Surtida', nota:'3 clásicos + 3 premium. Cuéntanos en los comentarios cuáles deseas.', items:[['s6','Caja surtida de 6',5500]]},
 ];
 const $=s=>document.querySelector(s);
 const fmt=n=>'$'+n.toLocaleString('es-CL');
@@ -131,7 +131,7 @@ $('#enviar').onclick=()=>{
     '🧁 *Pedido:*',...lineas,'',
     `💰 *Total: ${fmt(tot)}*`+(entrega==='Despacho'?' (+ despacho por confirmar)':''),'',
     `🚚 *Entrega:* ${entrega}`+(entrega==='Despacho'?`\n📍 *Dirección:* ${dir}`:''),
-    `📅 *Para:* ${f}`+($('#hora').value?` a las ${$('#hora').value}`:''),
+    `📅 *Para:* ${f} (${fecha.split('-').reverse().join('-')})`+($('#hora').value?` a las ${$('#hora').value}`:''),
     $('#coment').value.trim()?`\n📝 *Comentarios:* ${$('#coment').value.trim()}`:''
   ].join('\n').trim();
   window.location.href='https://wa.me/'+WHATSAPP+'?text='+encodeURIComponent(msg);
