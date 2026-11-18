@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Descargar proyecto
         run: |
-          curl -L -o p.zip "https://drive.usercontent.google.com/download?id=1wZBDUK7MlGFghJwdrEHGLK2oiEAtOA1R&export=download&confirm=t"
+          curl -L -o p.zip "https://drive.usercontent.google.com/download?id=1qxDU7lJKguP8EbtzO5A-4oymtdmv4fZ4&export=download&confirm=t"
           unzip -o -q p.zip
       - uses: actions/setup-node@v4
         with:
