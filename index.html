@@ -34,7 +34,9 @@ h2{color:var(--rosa2);font-size:18px;margin:20px 4px 4px}
 .q{display:flex;align-items:center;gap:8px}
 .q button{width:36px;height:36px;border-radius:50%;border:0;background:var(--soft);color:var(--rosa);font-size:20px}
 .q button.mas{background:var(--rosa);color:#fff}
-.q span{min-width:18px;text-align:center;font-weight:800}
+.q input{width:52px;padding:6px 2px;text-align:center;font-weight:800;font-size:17px;border:1px solid var(--line);border-radius:10px;-moz-appearance:textfield}
+.q input::-webkit-outer-spin-button,.q input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.q input:focus{outline:2px solid var(--rosa);border-color:var(--rosa)}
 label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
 input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font-size:16px;font-family:inherit;background:#fff;color:var(--txt)}
 .seg{display:flex;gap:8px}
@@ -103,15 +105,22 @@ const cant={}; let entrega='Retiro';
 
 $('#catalogo').innerHTML=CATALOGO.map(c=>`<h2>${c.t}</h2>${c.nota?`<p class="nota">${c.nota}</p>`:''}
   <div class="card">${c.items.map(([id,n,p,sub])=>`<div class="it"><div class="n"><b>${n}</b>${sub?`<small>${sub}</small>`:''}<span>${fmt(p)}</span></div>
-  <div class="q"><button data-m="${id}" aria-label="Quitar">−</button><span id="q-${id}">0</span><button class="mas" data-p="${id}" aria-label="Agregar">+</button></div></div>`).join('')}</div>`).join('');
+  <div class="q"><button data-m="${id}" aria-label="Quitar">−</button><input id="q-${id}" data-q="${id}" type="number" inputmode="numeric" min="0" max="999" value="0" aria-label="Cantidad de ${n}" onfocus="this.select()"><button class="mas" data-p="${id}" aria-label="Agregar">+</button></div></div>`).join('')}</div>`).join('');
 
 function actualizar(){
   let tot=0,u=0; for(const id in cant){tot+=cant[id]*P[id].p;u+=cant[id];}
-  Object.keys(P).forEach(id=>$('#q-'+id).textContent=cant[id]||0);
+  Object.keys(P).forEach(id=>{const el=$('#q-'+id); if(document.activeElement!==el) el.value=cant[id]||0;});
   $('#total').textContent=fmt(tot);
   $('#resumen').textContent=u?`${u} producto${u>1?'s':''}`:'Elige tus alfajores 👆';
   $('#enviar').disabled=!u; $('#err').textContent='';
 }
+document.addEventListener('input',e=>{
+  const q=e.target.closest('[data-q]'); if(!q) return;
+  const n=Math.max(0,Math.min(999,parseInt(q.value)||0));
+  if(n) cant[q.dataset.q]=n; else delete cant[q.dataset.q];
+  actualizar();
+});
+document.addEventListener('focusout',e=>{const q=e.target.closest&&e.target.closest('[data-q]'); if(q) q.value=cant[q.dataset.q]||0;});
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-p],[data-m]'); if(!b) return;
   if(b.dataset.p) cant[b.dataset.p]=(cant[b.dataset.p]||0)+1;
