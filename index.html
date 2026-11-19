@@ -90,7 +90,7 @@ footer{text-align:center;color:var(--sub);font-size:12px;margin-top:20px}
     <ul>
       <li><span class="ico">🕐</span><span><b>Pedidos normales:</b> mínimo <b>2 días</b> de anticipación, para darle al alfajor su reposo necesario.</span></li>
       <li><span class="ico">🎉</span><span><b>Eventos</b> (desde 15 alfajores): mínimo <b>1 semana</b> de anticipación, para organizarlo todo.</span></li>
-      <li><span class="ico">🛵</span><span><b>Despacho gratis</b> en pedidos sobre <b>$20.000</b>. El despacho <b>se coordina</b> contigo: <b>pregunta por la disponibilidad</b>.</span></li>
+      <li><span class="ico">🛵</span><span><b>Despacho:</b> se coordina directamente con la vendedora <b>por WhatsApp</b> (disponibilidad, día y valor).</span></li>
     </ul>
   </section>
   <div id="catalogo"></div>
@@ -103,7 +103,7 @@ footer{text-align:center;color:var(--sub);font-size:12px;margin-top:20px}
     <div id="dirBox" class="hidden">
       <label>Comuna</label><input id="comuna" autocomplete="address-level2" placeholder="Ej: Maipú">
       <label>Dirección</label><input id="dir" autocomplete="street-address" placeholder="Calle y número">
-      <div class="aviso" id="despAviso">🛵 El despacho se coordina contigo por WhatsApp: te confirmamos disponibilidad, día y valor.</div>
+      <div class="aviso" id="despAviso">🛵 El despacho se coordina directamente por WhatsApp: ahí acordamos disponibilidad, día y valor.</div>
     </div>
     <div class="aviso" id="antAviso"></div>
     <div style="display:flex;gap:8px">
@@ -138,7 +138,7 @@ const fmt=n=>'$'+n.toLocaleString('es-CL');
 const P={}; CATALOGO.forEach(c=>c.items.forEach(([id,n,p,sub])=>P[id]={n,p,sub}));
 // alfajores que trae cada producto (para saber si es evento)
 const ALF={c1:1,c3b:3,c3c:3,c4:4,c6:6,p1:1,p3b:3,p3c:3,p4:4,s6:6};
-const MIN_EVENTO=15, DIAS_NORMAL=2, DIAS_EVENTO=7, DESP_GRATIS=20000;
+const MIN_EVENTO=15, DIAS_NORMAL=2, DIAS_EVENTO=7;
 const isoLocal=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const masDias=n=>{const d=new Date(); d.setHours(12,0,0,0); d.setDate(d.getDate()+n); return d;};
 const totalAlf=()=>Object.keys(cant).reduce((a,id)=>a+cant[id]*(ALF[id]||1),0);
@@ -180,10 +180,6 @@ function reglasFecha(){
   $('#antAviso').innerHTML=esEvento()
     ?`🎉 Tu pedido es de <b>${totalAlf()} alfajores</b> (evento): lo podemos tener desde el <b>${largoF(masDias(dias))}</b>.`
     :`🕐 Podemos tener tu pedido listo desde el <b>${largoF(masDias(dias))}</b>.`;
-  let tot=0; for(const id in cant) tot+=cant[id]*P[id].p;
-  $('#despAviso').innerHTML=tot>=DESP_GRATIS
-    ?'🎁 ¡Tu pedido tiene <b>despacho gratis</b>! Coordinamos contigo por WhatsApp la disponibilidad y el día de entrega.'
-    :`🛵 Despacho gratis sobre $20.000 (te faltan ${fmt(DESP_GRATIS-tot)}). El despacho se coordina contigo por WhatsApp: te confirmamos disponibilidad, día y valor.`;
 }
 
 $('#enviar').onclick=()=>{
@@ -200,7 +196,7 @@ $('#enviar').onclick=()=>{
     '🎀 *Nuevo pedido – Franca Alfajoría*','',
     `👤 *Nombre:* ${nombre}`,'',
     '🧁 *Pedido:*',...lineas,'',
-    `💰 *Total: ${fmt(tot)}*`+(entrega==='Despacho'?(tot>=DESP_GRATIS?' · 🎁 despacho gratis':' (+ despacho por confirmar)'):''),
+    `💰 *Total: ${fmt(tot)}*`+(entrega==='Despacho'?' (+ despacho, se coordina por WhatsApp)':''),
     ...(esEvento()?[`🎉 *Evento:* ${totalAlf()} alfajores`]:[]),'',
     `🚚 *Entrega:* ${entrega}`+(entrega==='Despacho'?`\n📍 *Dirección:* ${dir}, ${comuna}`:''),
     `📅 *Para:* ${f} (${fecha.split('-').reverse().join('-')})`,
